@@ -33,14 +33,46 @@ public class ClassSchedule {
     private final String SUBJECTID_COL_HEADER = "subjectid";
     
     public String convertCsvToJsonString(List<String[]> csv) {
-        
-        return ""; // remove this!
+        JsonArray jsonArray = new JsonArray();
+        String[] headers = csv.get(0); // First row is the header
+        for (int i = 1; i < csv.size(); i++) {
+            String[] row = csv.get(i);
+            JsonObject jsonObject = new JsonObject();
+            for (int j = 0; j < headers.length; j++) {
+                jsonObject.put(headers[j], row[j]);
+        }
+        jsonArray.add(jsonObject);
+    }
+    return Jsoner.serialize(jsonArray);
         
     }
     
     public String convertJsonToCsvString(JsonObject json) {
+    List<String[]> csv = new ArrayList<>();
+    
+    // Add headers
+    String[] headers = {CRN_COL_HEADER, SUBJECT_COL_HEADER, NUM_COL_HEADER, DESCRIPTION_COL_HEADER, 
+                        SECTION_COL_HEADER, TYPE_COL_HEADER, CREDITS_COL_HEADER, START_COL_HEADER,
+                        END_COL_HEADER, DAYS_COL_HEADER, WHERE_COL_HEADER, SCHEDULE_COL_HEADER, 
+                        INSTRUCTOR_COL_HEADER, SUBJECTID_COL_HEADER};
+    csv.add(headers);
+    
+    JsonArray jsonArray = (JsonArray) json.get("section");
+    
+    // Iterate through each JSON object
+    for (Object obj : jsonArray) {
+        JsonObject section = (JsonObject) obj;
+        String[] row = new String[headers.length];
         
-        return ""; // remove this!
+        // Fill row with data corresponding to headers
+        row[0] = (String) section.get(CRN_COL_HEADER);
+        row[1] = (String) section.get(SUBJECT_COL_HEADER);
+        // Continue for all headers...
+        
+        csv.add(row);
+    }
+    
+    return getCsvString(csv); // Convert List<String[]> to CSV string
         
     }
     

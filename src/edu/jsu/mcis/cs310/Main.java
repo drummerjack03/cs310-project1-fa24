@@ -12,16 +12,23 @@ public class Main {
         try {
             
             // Get CSV/JSON Data
-            
             List<String[]> csvOriginal = schedule.getCsv();
             JsonObject jsonOriginal = schedule.getJson();
             
             // Print Total Sections Found in CSV and JSON Data (should be equal)
-            
             System.out.println("Sections Found (CSV): " + (csvOriginal.size() - 1));
-            
             JsonArray sections = (JsonArray)jsonOriginal.get("section");
             System.out.println("Sections Found (JSON): " + sections.size());
+            
+            // Convert CSV to JSON and print
+            String jsonString = schedule.convertCsvToJsonString(csvOriginal);
+            System.out.println("CSV to JSON Conversion:");
+            System.out.println(jsonString);
+            
+            // Convert JSON to CSV and print
+            String csvString = schedule.convertJsonToCsvString(jsonOriginal);
+            System.out.println("JSON to CSV Conversion:");
+            System.out.println(csvString);
             
         }
         catch (Exception e) { e.printStackTrace(); }
